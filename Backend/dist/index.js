@@ -34,8 +34,8 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 const node_fs_1 = require("node:fs");
-const Parser = __importStar(require("./grammar"));
+const Parser = __importStar(require("./grammar.js"));
 const filePath = process.argv[2];
-const data = (0, node_fs_1.readFileSync)(filePath, { encoding: 'utf-8' });
+let data = (0, node_fs_1.readFileSync)(filePath, { encoding: 'utf-8' });
 const output = Parser.parse(data.trim());
 console.log(output);

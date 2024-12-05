@@ -1,1 +1,4 @@
- 'chejoHueco' 
+("hola")
+"hola" "mojo" "jojo"
+[a-e]
+[abc]

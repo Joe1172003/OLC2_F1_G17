@@ -1,5 +1,5 @@
 Start
-    = head:Ruler tail:("\n" @Ruler)* {
+    = head:Ruler tail:(_ @Ruler)* {
         return [head, ...tail];
     }
 
@@ -27,7 +27,7 @@ CharacterSet
 
 Character
     = Range
-    / Text
+    / Text { return text().split("").join(","); }
 
 Range
     = from:Text "-" to:Text {
@@ -44,6 +44,9 @@ String
 
 Text
     = [^\n\"\'\-\]]* { return text(); }
+
+Identifier
+    = [_a-z][_a-z0-9]*        
 
 _ "whitespace"
     = [ \t\n\r]*
