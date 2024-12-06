@@ -5,7 +5,7 @@ grammar
   	= rule+
 
 rule
-  	= identifier _ "=" _ expression _
+  	= identifier _ "=" _ expression _ (";" _ )?
  
 expression
   	= choice
@@ -20,7 +20,7 @@ prefix
   	= suffix
 
 suffix
-  	= primary (quantifier)?
+  	= primary ( _ quantifier)?
 
 primary
     = identifier
@@ -38,7 +38,7 @@ identifier
 literal
     = "\"" [^\"]* "\""
     / "'" [^']* "'"
-
+	
 range
   	= "[" [^\]]* "]"
   
