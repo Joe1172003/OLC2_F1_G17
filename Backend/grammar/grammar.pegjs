@@ -25,9 +25,12 @@ suffix
 primary
     = identifier
     / literal
-    / class
-    / "(" _ expression _ ")"
+    / range
+    / sub_expresion
     / concatenation
+
+sub_expresion 
+	= "(" _ expression _ ")"
 
 identifier
   	= [a-zA-Z_][a-zA-Z0-9_]*
@@ -36,11 +39,11 @@ literal
     = "\"" [^\"]* "\""
     / "'" [^']* "'"
 
-class
+range
   	= "[" [^\]]* "]"
   
 concatenation
-	= (space (literal / identifier))+
+	= (space (literal / identifier / range / sub_expresion))+
 
 quantifier
     = "*"
