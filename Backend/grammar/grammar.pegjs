@@ -10,11 +10,13 @@ Identifier
     = [_a-z][_a-z0-9]* { return text(); }
 
 Ruler
-    = Identifier
+    = Repetition
     / String (_ @String)* 
     / CharacterSet
     / SubExpression
 
+Repetition
+    = (String / CharacterSet / SubExpression) _ ("+" / "*" / "?")
 
 CharacterSet
     = "[" Character "]" 
