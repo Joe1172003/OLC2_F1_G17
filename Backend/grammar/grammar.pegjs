@@ -1,53 +1,47 @@
-Start
-    = head:Instruction tail:(_newline @Instruction)* {
-        return [head, ...tail];
-    }
+start
+  = grammar
 
-Instruction
-    = Identifier _ "=" _ Rules _
+grammar
+  = rule+
 
-SubExpression
-    = "(" @Rules ")"
+rule
+  = identifier _ "=" _ expression _
 
-Rules 
-    = @Expresion (_ @Expresion)*
-    / @Expresion _ Signos
-    / @Expresion (_ "/" _ (Expresion _ Signos*))*
-    
-Signos
-    = "+" / "*" / "?"
+expression
+  = choice
 
-Expresion   
-    = Identifier
-    / String
-    / CharacterSet
-    / SubExpression
-    
+choice
+  = sequence ("/" sequence)*
 
-CharacterSet
-    = "[" Character "]" 
+sequence
+  = (prefix)*
 
-Character
-    = Range
-    / Text 
+prefix
+  = suffix
 
-Range
-    = Text "-" Text 
-    
-String
-    = "\"" @Text "\""
-    / "\'" @Text "\'"
-    
-Identifier
-    = [_a-z][_a-z0-9]* { return text(); }
+suffix
+  = primary (quantifier)?
 
-Text
-    = [^\n\"\'\]]* { return text(); }
+primary
+  = identifier
+  / literal
+  / class
+  / "(" _ expression _ ")"
 
-_newline
-    = "\r\n"
-    / "\n"
-    / "\r"
+identifier
+  = [a-zA-Z_][a-zA-Z0-9_]*
+  
+literal
+  = "\"" [^\"]* "\""
+  / "'" [^']* "'"
+
+class
+  = "[" [^\]]* "]"
+
+quantifier
+  = "*"
+  / "+"
+  / "?"
 
 _ "whitespace"
- = [ \t\n\r]*
+  = [ \t\n\r]*
