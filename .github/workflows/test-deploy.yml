@@ -20,12 +20,12 @@ jobs:
 
     - name: Install dependencies
       run: |
-        cd codeeditor
+        cd Frontend
         npm install
 
     - name: Build project
       run: |
-        cd codeeditor
+        cd Frontend
         npm run build
 
     - name: Deploy to GitHub Pages
