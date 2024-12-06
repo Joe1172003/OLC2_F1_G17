@@ -1,4 +1,7 @@
-("hola")
-"hola" "mojo" "jojo"
-[a-e]
-[abc]
+palabra = "hola" "juan" "pedro"
+palabra2 = "hola2"
+edad = '15'
+integer = [0-9]
+prueba = ((integer))
+
+

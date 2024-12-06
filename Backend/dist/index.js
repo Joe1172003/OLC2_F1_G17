@@ -37,5 +37,15 @@ const node_fs_1 = require("node:fs");
 const Parser = __importStar(require("./grammar.js"));
 const filePath = process.argv[2];
 let data = (0, node_fs_1.readFileSync)(filePath, { encoding: 'utf-8' });
-const output = Parser.parse(data.trim());
-console.log(output);
+try {
+    const output = Parser.parse(data.trim());
+    console.log(output);
+}
+catch (error) {
+    if (error.name === "SyntaxError") {
+        console.error(`Error of sintaxis in line : ${error.location.start.line}, column: ${error.location.start.column}. ${error.message}`);
+    }
+    else {
+        console.error("An unexpected error occurred:", error);
+    }
+}

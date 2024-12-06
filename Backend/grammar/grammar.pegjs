@@ -1,52 +1,47 @@
 Start
-    = head:Ruler tail:(_ @Ruler)* {
+    = head:Instruction tail:(_newline @Instruction)* {
         return [head, ...tail];
     }
 
+Instruction
+    = Identifier _ "=" _ Ruler
+
+Identifier
+    = [_a-z][_a-z0-9]* { return text(); }
+
 Ruler
-    = JoinStrings    
-    / SubExpression
+    = Identifier
+    / String (_ @String)* 
     / CharacterSet
+    / SubExpression
 
-JoinStrings
-    = head:String tail:(_ @String)* {
-        if (tail.length > 0) {
-            return head + tail.join("");
-        } else {
-            return head;
-        }
-    } 
-
-SubExpression
-    = "(" @JoinStrings ")"
 
 CharacterSet
-    = "[" chars:Character "]" {
-        return chars;
-    }
+    = "[" Character "]" 
+
+SubExpression
+    = "(" @Ruler ")"
 
 Character
     = Range
-    / Text { return text().split("").join(","); }
+    / Text 
 
 Range
-    = from:Text "-" to:Text {
-        let range = [];
-        for (let i = from.charCodeAt(0); i <= to.charCodeAt(0); i++) {
-            range.push(String.fromCharCode(i));
-        }
-        return range.join();
-    }
-
+    = Text "-" Text 
+    
 String
     = "\"" @Text "\""
     / "\'" @Text "\'"
 
 Text
-    = [^\n\"\'\-\]]* { return text(); }
+    = [^\n\"\'\]]* { return text(); }
 
-Identifier
-    = [_a-z][_a-z0-9]*        
+_newline
+    = "\r\n"
+    / "\n"
+    / "\r"
 
 _ "whitespace"
     = [ \t\n\r]*
+
+
