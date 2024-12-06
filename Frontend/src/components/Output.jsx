@@ -15,7 +15,6 @@ const Output = ({editorRef, outputRef, getOutput}) => {
         const result_parser = parseInput(editorRef.getValue())
         setOutput(result_parser)
         getOutput(result_parser)
-        console.log(result_parser);
     }
 
     return (
@@ -41,7 +40,7 @@ const Output = ({editorRef, outputRef, getOutput}) => {
             >
                 <pre>
                     {output && output.length > 0
-                        ? <Text color={'white'} fontWeight={'semibold'} fontStyle={'italic'}>{output}</Text>
+                        ? <Text color={output[1] == 'error' ? 'red' : '#73ed3a'} fontWeight={'semibold'} fontStyle={'italic'}>{output[0]}</Text>
                         : 'Click "Analize Code" to see the result'}
                 </pre>    
             </Box>

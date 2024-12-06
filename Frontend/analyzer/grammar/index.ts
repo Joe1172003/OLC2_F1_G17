@@ -5,10 +5,10 @@ export default function parseInput(input: string) {
         Parser.parse(input);
     } catch (error) {
         if (error.name === "SyntaxError") {
-            return (`𒉽 Error of sintaxis in line : ${error.location.start.line}, column: ${error.location.start.column}. ${error.message}`);
+            return [`𒉽 Error of sintaxis in line : ${error.location.start.line}, column: ${error.location.start.column}. ${error.message}`, 'error'];
         } else {
-            return ("An unexpected error occurred:" + error);
+            return ["𒉽 An unexpected error occurred:" + error, 'error'];
         }
     }
-    return '✔ Succefull grammar!! :)';
+    return ['✔ Succefull grammar!! :)', 'success'];
 }
