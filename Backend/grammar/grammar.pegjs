@@ -4,29 +4,28 @@ Start
     }
 
 Instruction
-    = Identifier _ "=" _ Ruler
+    = Identifier _ "=" _ Rules _
 
-Identifier
-    = [_a-z][_a-z0-9]* { return text(); }
+SubExpression
+    = "(" @Rules ")"
 
-Ruler
-    = Repetition
-    / String (_ @String)* 
+Rules 
+    = @Expresion (_ @Expresion)*
+    / @Expresion _ Signos
+    / @Expresion (_ "/" _ (Expresion _ Signos*))*
+    
+Signos
+    = "+" / "*" / "?"
+
+Expresion   
+    = Identifier
+    / String
     / CharacterSet
     / SubExpression
-    / Alternatives
-
-Alternatives
-    = (String / CharacterSet / SubExpression) (_ "/" _ (String / CharacterSet / SubExpression))*
-
-Repetition
-    = (String / CharacterSet / SubExpression) _ ("+" / "*" / "?")
+    
 
 CharacterSet
     = "[" Character "]" 
-
-SubExpression
-    = "(" @Ruler ")"
 
 Character
     = Range
@@ -38,6 +37,9 @@ Range
 String
     = "\"" @Text "\""
     / "\'" @Text "\'"
+    
+Identifier
+    = [_a-z][_a-z0-9]* { return text(); }
 
 Text
     = [^\n\"\'\]]* { return text(); }
@@ -48,6 +50,4 @@ _newline
     / "\r"
 
 _ "whitespace"
-    = [ \t\n\r]*
-
-
+ = [ \t\n\r]*
