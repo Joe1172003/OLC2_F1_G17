@@ -14,6 +14,10 @@ Ruler
     / String (_ @String)* 
     / CharacterSet
     / SubExpression
+    / Alternatives
+
+Alternatives
+    = (String / CharacterSet / SubExpression) (_ "/" _ (String / CharacterSet / SubExpression))*
 
 Repetition
     = (String / CharacterSet / SubExpression) _ ("+" / "*" / "?")
