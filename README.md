@@ -1,2 +1,9 @@
-# OLC2_F1_G17
-Fase1 - Compiladores 2
+# Organización de Lenguajes y Compiladores 2
+#### Fase: 1
+#### Grupo: 17
+
+| Nombre | Carnet     |
+| :-------- | :------- | 
+| `Sergio Joel Rodas Valdez` | `202200271` |
+| `Ariel Josué López Gálvez` | `202200185` |
+| `Joel Alexander Guzaro Tzunun` | `202201395` |
