@@ -17,6 +17,14 @@ const Output = ({editorRef, outputRef, getOutput}) => {
         getOutput(result_parser)
     }
 
+    const add_break = (output, number)=>{
+        let result = "";
+        for (let i = 0; i < output.length; i += number) {
+            result += output.slice(i, i + number) + "\n";
+        }
+        return result;
+    }
+
     return (
         <Box w="40%" py={5}>
             <Text mb={2} fontSize='lg'>Analize</Text>
@@ -40,7 +48,7 @@ const Output = ({editorRef, outputRef, getOutput}) => {
             >
                 <pre>
                     {output && output.length > 0
-                        ? <Text color={output[1] == 'error' ? 'red' : '#73ed3a'} fontWeight={'semibold'} fontStyle={'italic'}>{output[0]}</Text>
+                        ? <Text color={output[1] == 'error' ? 'red' : '#73ed3a'} fontWeight={'semibold'} fontStyle={'italic'}>{add_break(output[0], 60)}</Text>
                         : 'Click "Analize Code" to see the result'}
                 </pre>    
             </Box>
