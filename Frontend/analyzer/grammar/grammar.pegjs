@@ -40,8 +40,22 @@ literal
     / "'" [^']* "'"
 	
 range
-  	= "[" [^\]]* "]"
-  
+  	= "[" input_range+ "]"
+    
+input_range = in_range:regex_range &{
+		  const regex = /([^\s])-([^\s])/gm;
+          const isValidRange = (in_range) => {
+            const message = in_range.toString();
+            const found = message.match(regex);
+            return found?.length > 0 ? found?.every(element => element[0] < element[2]) : true
+          }
+          return isValidRange(in_range)
+        }
+
+
+regex_range 
+	=  [^[\]]+ {return text()}
+
 concatenation
 	= (space (literal / identifier / range / sub_expresion))+
 

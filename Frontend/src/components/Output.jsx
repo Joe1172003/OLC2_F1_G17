@@ -10,6 +10,20 @@ const Output = ({editorRef, outputRef, getOutput}) => {
         setOutput(outputRef);
     }, [outputRef]);
 
+    const execute_parser = () => {
+        const result_parser = parseInput(editorRef.getValue())
+        setOutput(result_parser)
+        getOutput(result_parser)
+    }
+
+    const add_break = (output, number)=>{
+        let result = "";
+        for (let i = 0; i < output.length; i += number) {
+            result += output.slice(i, i + number) + "\n";
+        }
+        return result;
+    }
+
     return (
         <Box w="40%" py={5}>
             <Text mb={2} fontSize='lg'>Analize</Text>
@@ -19,6 +33,7 @@ const Output = ({editorRef, outputRef, getOutput}) => {
                 isLoading={isLoading}
                 borderColor={'rgba(99,179,237,1)'}
                 color={'rgba(99,179,237,1)'}
+                onClick={execute_parser}
             >
                 Analize Code
             </Button>
@@ -32,9 +47,9 @@ const Output = ({editorRef, outputRef, getOutput}) => {
             >
                 <pre>
                     {output && output.length > 0
-                        ? output.map((line, i) => <Text color={'white'} fontWeight={'semibold'} fontStyle={'italic'} key={i}>{line}</Text>)
+                        ? <Text color={output[1] == 'error' ? 'red' : '#73ed3a'} fontWeight={'semibold'} fontStyle={'italic'}>{add_break(output[0], 60)}</Text>
                         : 'Click "Analize Code" to see the result'}
-                </pre>    
+                </pre> 
             </Box>
         </Box>
     );
