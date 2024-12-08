@@ -1,5 +1,7 @@
 import {Box, Text, Button, useToast, Icon} from "@chakra-ui/react";
 import {useEffect, useState} from "react";
+import parseInput from "../../analyzer/grammar";
+
 
 const Output = ({editorRef, outputRef, getOutput}) => {
     const toast = useToast();
