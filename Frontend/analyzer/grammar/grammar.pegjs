@@ -40,22 +40,23 @@ literal
     / "'" [^']* "'"
 	
 range
-  	= "[" input_range+ "]"
-    
-input_range = in_range:regex_range &{
-		  const regex = /([^\s])-([^\s])/gm;
-          const isValidRange = (in_range) => {
-            const message = in_range.toString();
-            const found = message.match(regex);
-            return found?.length > 0 ? found?.every(element => element[0] < element[2]) : true
-          }
-          return isValidRange(in_range)
-        }
+	= "[" ranges:(range_part)+ "]" {
+  		ranges.forEach(range => {
+        	if (range.type === 'char_range' && range.start.charCodeAt(0) > range.end.charCodeAt(0)) {
+            	throw new Error(`Rango inválido: ${range.start}-${range.end}`);
+          	}
+      	});
+        return ranges;
+    }
 
-
-regex_range 
-	=  [^[\]]+ {return text()}
-
+range_part
+	= start:[a-zA-Z0-9_] "-" end:[a-zA-Z0-9_] { 
+    	return { type: 'char_range', start: start, end: end }; 
+    }
+	/ char:[a-zA-Z0-9_] { 
+      return { type: 'single_char', char: char }; 
+    }
+  
 concatenation
 	= (space (literal / identifier / range / sub_expresion))+
 
@@ -68,4 +69,4 @@ _ "whitespace"
   	= [ \t\n\r]*
     
 space
-	= [ \t]*
+	= [ \t]*
