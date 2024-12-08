@@ -10,12 +10,10 @@ const Output = ({editorRef, outputRef, getOutput}) => {
         setOutput(outputRef);
     }, [outputRef]);
 
-    const add_break = (output, number)=>{
-        let result = "";
-        for (let i = 0; i < output.length; i += number) {
-            result += output.slice(i, i + number) + "\n";
-        }
-        return result;
+    const execute_parser = () => {
+        const result_parser = parseInput(editorRef.getValue())
+        setOutput(result_parser)
+        getOutput(result_parser)
     }
 
     const add_break = (output, number)=>{
@@ -35,6 +33,7 @@ const Output = ({editorRef, outputRef, getOutput}) => {
                 isLoading={isLoading}
                 borderColor={'rgba(99,179,237,1)'}
                 color={'rgba(99,179,237,1)'}
+                onClick={execute_parser}
             >
                 Analize Code
             </Button>
