@@ -68,4 +68,4 @@ _ "whitespace"
   	= [ \t\n\r]*
     
 space
-	= [ \t]*
+	= [ \t]*
