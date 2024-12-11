@@ -20,25 +20,51 @@ prefix
   	= suffix
 
 suffix
-  	= primary ( _ quantifier)?
+  	=  alias  primary ( _ quantifier)?  
 
+
+	
 primary
-    = identifier
-    / literal
-    / range
-    / sub_expresion
+    = identifier	  (matches)?
+    / end_of_input
+    / literal ("i")?  (matches)?
+    / range			  (matches)?
+    / period		  (matches)?
+    / sub_expresion   (matches)?
     / concatenation
+	
+matches
+	=  _ ("|" _ number_options _ ("," _ . _)? _ "|")	
 
 sub_expresion 
 	= "(" _ expression _ ")"
 
+alias 
+	= (identifier _ ":"_ )?
+
+number_options 
+      =  min:(number)?  _ ".." _ max:(number)?
+      / number
+      / identifier
+
 identifier
   	= [a-zA-Z_][a-zA-Z0-9_]*
+
+
+number
+ 	= [0-9]+
   
 literal
-    = "\"" [^\"]* "\""
-    / "'" [^']* "'"
-	
+    = "\"" [^\"]i* "\""
+    / "'" [^']i* "'"
+    
+period 
+	= (_ ".")+  
+
+end_of_input
+	= ("\"f\"")? (_ "!.") 
+    
+
 range
   	= "[" input_range+ "]"
     
@@ -57,7 +83,7 @@ regex_range
 	=  [^[\]]+ {return text()}
 
 concatenation
-	= (space (literal / identifier / range / sub_expresion))+
+	= (space alias (literal / identifier / range / sub_expresion))+
 
 quantifier
     = "*"
