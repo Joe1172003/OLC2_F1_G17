@@ -5,7 +5,11 @@ grammar
   = (comment _ / rule)+
 
 rule
-  = identifier _ (comment)? _ "=" _ expression _ (";" _ )?
+  = identifier _ (complement)? _ "=" _ expression _ (";" _ )?
+ 
+complement
+	= comment
+    / literal
  
 expression
   = choice
@@ -23,13 +27,14 @@ suffix
   = alias primary (_ quantifier)?  
 
 primary
-  = identifier (matches)?
-  / end_of_input
-  / literal ("i")? (matches)?
-  / range (matches)?
-  / period (matches)?
-  / sub_expresion (matches)?
-  / concatenation
+	= assertion
+    / identifier (matches)?
+    / end_of_input
+    / literal ("i")? (matches)?
+    / range (matches)?
+    / period (matches)?
+    / sub_expresion (matches)?
+    / concatenation
 	
 matches
 	=  _ ("|" _ number_options _ ("," _ . _)? _ "|")	
@@ -88,6 +93,16 @@ quantifier
 comment
   = "\/\/" [^\n]*
   / "\/\*" (!"\*\/" .)* "\*\/"
+
+assertion
+	= positive_assertion
+    / negative_assertion
+    
+positive_assertion
+	= "&" _ expression
+    
+negative_assertion
+	= "!" _ expression
 
 _ "whitespace"
   = [ \t\n\r]*
