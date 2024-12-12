@@ -9,7 +9,7 @@ rule
  
 complement
 	= comment
-    / literal
+  / literal
  
 expression
   = choice
@@ -28,13 +28,13 @@ suffix
 
 primary
 	= assertion
-    / identifier (matches)?
-    / end_of_input
-    / literal ("i")? (matches)?
-    / range (matches)?
-    / period (matches)?
-    / sub_expresion (matches)?
-    / concatenation
+  / identifier (matches)?
+  / end_of_input
+  / literal ("i")? (matches)?
+  / range (matches)?
+  / period (matches)?
+  / sub_expresion (matches)?
+  / concatenation
 	
 matches
 	=  _ ("|" _ number_options _ ("," _ . _)? _ "|")	
@@ -95,8 +95,8 @@ comment
   / "\/\*" (!"\*\/" .)* "\*\/"
 
 assertion
-	= positive_assertion
-    / negative_assertion
+	= _ positive_assertion
+  / _ negative_assertion
     
 positive_assertion
 	= "&" _ expression
