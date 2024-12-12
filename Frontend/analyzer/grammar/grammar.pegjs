@@ -42,6 +42,8 @@ simpleExpression
 sub_expresion 
 	= "(" _ choice _ ")"
 
+period 
+	= (_ ".")+  
 
 literal
     = "\"" [^\"]i* "\""
