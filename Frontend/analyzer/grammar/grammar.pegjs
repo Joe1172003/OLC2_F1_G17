@@ -2,14 +2,14 @@ start
     = _ grammar
 
 grammar
-    = (comment _ / rule)+
-
+    = ( newLine comment newLine / rule newLine)+
+	
 rule
-    = identifier _ (complement)? _ "=" _ choice _ (";" _ )?
-
-choice
-    = sequence (_ "/" _ sequence)*
-
+    = newLine identifier newLine (complement)? newLine "=" _ choice newLine (_ ";" _ )?
+	
+choice 
+	= sequence ( newLine comment newLine / (newLine "/" newLine sequence newLine (comment)? newLine))*
+	  
 sequence
     = pluck (_ pluck)*
 
@@ -18,10 +18,10 @@ pluck
 
 alias
     = (identifier _ ":")? _ primary
-
+		
 primary
-    = [&!$]? _ simpleExpression _ quantifier?
-
+    = [&!$]? _ simpleExpression _ (quantifier / matches)?
+		
 matches
     = "|" _ (number / identifier) _ "|"
     / "|" _ (number / identifier)? _ ".." _ (number / identifier)? _ "|"
@@ -35,12 +35,19 @@ quantifier
 
 simpleExpression
     = identifier
+    / end_of_input
     / literal ("i")?
     / range ("i")?
     / sub_expresion
+    / period
+  
 
 sub_expresion 
 	= "(" _ choice _ ")"
+
+
+end_of_input
+	= ("\"f\"")? (_ "!.") 
 
 period 
 	= (_ ".")+  
@@ -62,25 +69,26 @@ input_range = in_range:regex_range &{
     return isValidRange(in_range)
 }
 
+complement
+	= comment  
+    / literal
+
+comment
+    = "\/\/" [^\n]* 
+    / "\/\*" (!"\*\/" .)* "\*\/"
+
 regex_range 
 	=  [^[\]]+ {return text()}
 
 identifier
     = [a-zA-Z_][a-zA-Z0-9_]*
 
-complement
-	= comment
-    / literal
+_  
+    = [ \t]*
 
-comment
-    = "\/\/" [^\n]*
-    / "\/\*" (!"\*\/" .)* "\*\/"
 
-_ "whitespace"
-    = [ \t\n\r]*
-    
-space
-	= [ \t]*
+newLine "whitespace"
+        = [ \t\n\r]*
 
 number
  	= [0-9]+
