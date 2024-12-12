@@ -1,116 +1,84 @@
 start
-  = _ grammar
+    = _ grammar
 
 grammar
-  = (comment _ / rule)+
+    = (comment _ / rule)+
 
 rule
-  = identifier _ (complement)? _ "=" _ expression _ (";" _ )?
- 
-complement
-	= comment
-    / literal
- 
-expression
-  = choice
+    = identifier _ (complement)? _ "=" _ choice _ (";" _ )?
 
 choice
-  = sequence (_ "/" _ sequence)*
+    = sequence (_ "/" _ sequence)*
 
 sequence
-  = (prefix)*
+    = pluck (_ pluck)*
 
-prefix
-  = suffix
+pluck
+    = "@"? _ alias
 
-suffix
-  =  ("@")? alias primary (_ quantifier)?  
-		
+alias
+    = (identifier _ ":")? _ primary
+
 primary
-	= assertion
-    / identifier (matches)?
-    / end_of_input
-    / literal ("i")? (matches)?
-    / range (matches)?	
-    / period (matches)?
-    / sub_expresion (matches)?
-    / concatenation
-		
+    = [&!$]? _ simpleExpression _ quantifier?
+
 matches
-	=  _ ("|" _ number_options _ ("," _ primary _)? _ "|")
-    / _ ("|" _ number_options _ ("," _ concatenation _)? _ "|")
+    = "|" _ (number / identifier) _ "|"
+    / "|" _ (number / identifier)? _ ".." _ (number / identifier)? _ "|"
+    / "|" _ (number / identifier)? _ "," _ choice _ "|"
+    / "|" _ (number / identifier)? _ ".." _ (number / identifier)? _ "," _ choice _ "|"
+
+quantifier
+    = "*"
+    / "+"
+    / "?"
+
+simpleExpression
+    = identifier
+    / literal ("i")?
+    / range ("i")?
+    / sub_expresion
 
 sub_expresion 
-	= "(" _ expression _ ")"
+	= "(" _ choice _ ")"
 
-alias 
-	= (identifier _ ":"_ )?
 
-number_options 
-  =  min:(number / identifier)?  _ ".." _ max:(number / identifier)? 
-  / number
-  / identifier
-
-identifier
-  = [a-zA-Z_][a-zA-Z0-9_]*
-
-number
- 	= [0-9]+
-  
 literal
-  = "\"" [^\"]i* "\""
-  / "'" [^']i* "'"
-    
-period 
-	= (_ ".")+  
+    = "\"" [^\"]i* "\""
+    / "'" [^']i* "'"
 
-end_of_input
-	= ("\"f\"")? (_ "!.") 
-    
 range
-  = "[" input_range+ "]"
+    = "[" input_range+ "]"
     
 input_range = in_range:regex_range &{
-  const regex = /([^\s])-([^\s])/gm;
-  const isValidRange = (in_range) => {
+    const regex = /([^\s])-([^\s])/gm;
+    const isValidRange = (in_range) => {
     const message = in_range.toString();
-    const found = message.match(regex);
-    return found?.length > 0 ? found?.every(element => element[0] < element[2]) : true
-  }
-  return isValidRange(in_range)
+        const found = message.match(regex);
+        return found?.length > 0 ? found?.every(element => element[0] < element[2]) : true
+    }
+    return isValidRange(in_range)
 }
 
 regex_range 
 	=  [^[\]]+ {return text()}
 
-concatenation
-	= (space ("@")? alias (literal (matches)? / identifier (matches)? / range (matches)? / sub_expresion (matches)? / assertion (matches)?))+
-		
-quantifier
-  = "*"
-  / "+"
-  / "?"
+identifier
+    = [a-zA-Z_][a-zA-Z0-9_]*
+
+complement
+	= comment
+    / literal
 
 comment
-  = "\/\/" [^\n]*
-  / "\/\*" (!"\*\/" .)* "\*\/"
-	
-assertion
-	= _ positive_assertion
-    / _ negative_assertion
-    / _ dollar
-    
-positive_assertion
-	=  "&" _ expression
-    
-negative_assertion
-	= "!" _ expression
-
-dollar
-	= "$" _ expression
+    = "\/\/" [^\n]*
+    / "\/\*" (!"\*\/" .)* "\*\/"
 
 _ "whitespace"
-  = [ \t\n\r]*
+    = [ \t\n\r]*
     
 space
 	= [ \t]*
+
+number
+ 	= [0-9]+
