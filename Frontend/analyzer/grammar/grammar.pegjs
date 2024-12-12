@@ -9,7 +9,7 @@ rule
  
 complement
 	= comment
-  / literal
+    / literal
  
 expression
   = choice
@@ -24,18 +24,18 @@ prefix
   = suffix
 
 suffix
-  = alias primary (_ quantifier)?  
-
+  =  ("@")? alias primary (_ quantifier)?  
+		
 primary
 	= assertion
-  / identifier (matches)?
-  / end_of_input
-  / literal ("i")? (matches)?
-  / range (matches)?
-  / period (matches)?
-  / sub_expresion (matches)?
-  / concatenation
-	
+    / identifier (matches)?
+    / end_of_input
+    / literal ("i")? (matches)?
+    / range (matches)?
+    / period (matches)?
+    / sub_expresion (matches)?
+    / concatenation
+		
 matches
 	=  _ ("|" _ number_options _ ("," _ . _)? _ "|")	
 
@@ -83,8 +83,8 @@ regex_range
 	=  [^[\]]+ {return text()}
 
 concatenation
-	= (space alias (literal / identifier / range / sub_expresion))+
-
+	= (space ("@")? alias (literal / identifier / range / sub_expresion / assertion))+
+		
 quantifier
   = "*"
   / "+"
@@ -93,16 +93,20 @@ quantifier
 comment
   = "\/\/" [^\n]*
   / "\/\*" (!"\*\/" .)* "\*\/"
-
+	
 assertion
 	= _ positive_assertion
-  / _ negative_assertion
+    / _ negative_assertion
+    / _ dollar
     
 positive_assertion
-	= "&" _ expression
+	=  "&" _ expression
     
 negative_assertion
 	= "!" _ expression
+
+dollar
+	= "$" _ expression
 
 _ "whitespace"
   = [ \t\n\r]*
