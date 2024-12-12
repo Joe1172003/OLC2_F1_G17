@@ -1,71 +1,86 @@
 start
-  	= grammar
+    = _ grammar
 
 grammar
-  	= rule+
+    = (comment _ / rule)+
 
 rule
-  	= identifier _ "=" _ expression _ (";" _ )?
- 
-expression
-  	= choice
+    = identifier _ (complement)? _ "=" _ choice _ (";" _ )?
 
 choice
-  	= sequence (_ "/" _ sequence)*
+    = sequence (_ "/" _ sequence)*
 
 sequence
-  	= (prefix)*
+    = pluck (_ pluck)*
 
-prefix
-  	= suffix
+pluck
+    = "@"? _ alias
 
-suffix
-  	= primary ( _ quantifier)?
+alias
+    = (identifier _ ":")? _ primary
 
 primary
-    = identifier
-    / literal
-    / range
-    / sub_expresion
-    / concatenation
+    = [&!$]? _ simpleExpression _ quantifier?
 
-sub_expresion 
-	= "(" _ expression _ ")"
-
-identifier
-  	= [a-zA-Z_][a-zA-Z0-9_]*
-  
-literal
-    = "\"" [^\"]* "\""
-    / "'" [^']* "'"
-	
-range
-  	= "[" input_range+ "]"
-    
-input_range = in_range:regex_range &{
-		  const regex = /([^\s])-([^\s])/gm;
-          const isValidRange = (in_range) => {
-            const message = in_range.toString();
-            const found = message.match(regex);
-            return found?.length > 0 ? found?.every(element => element[0] < element[2]) : true
-          }
-          return isValidRange(in_range)
-        }
-
-
-regex_range 
-	=  [^[\]]+ {return text()}
-
-concatenation
-	= (space (literal / identifier / range / sub_expresion))+
+matches
+    = "|" _ (number / identifier) _ "|"
+    / "|" _ (number / identifier)? _ ".." _ (number / identifier)? _ "|"
+    / "|" _ (number / identifier)? _ "," _ choice _ "|"
+    / "|" _ (number / identifier)? _ ".." _ (number / identifier)? _ "," _ choice _ "|"
 
 quantifier
     = "*"
     / "+"
     / "?"
 
+simpleExpression
+    = identifier
+    / literal ("i")?
+    / range ("i")?
+    / sub_expresion
+
+sub_expresion 
+	= "(" _ choice _ ")"
+
+period 
+	= (_ ".")+  
+
+literal
+    = "\"" [^\"]i* "\""
+    / "'" [^']i* "'"
+
+range
+    = "[" input_range+ "]"
+    
+input_range = in_range:regex_range &{
+    const regex = /([^\s])-([^\s])/gm;
+    const isValidRange = (in_range) => {
+    const message = in_range.toString();
+        const found = message.match(regex);
+        return found?.length > 0 ? found?.every(element => element[0] < element[2]) : true
+    }
+    return isValidRange(in_range)
+}
+
+regex_range 
+	=  [^[\]]+ {return text()}
+
+identifier
+    = [a-zA-Z_][a-zA-Z0-9_]*
+
+complement
+	= comment
+    / literal
+
+comment
+    = "\/\/" [^\n]*
+    / "\/\*" (!"\*\/" .)* "\*\/"
+
 _ "whitespace"
-  	= [ \t\n\r]*
+    = [ \t\n\r]*
     
 space
 	= [ \t]*
+
+number
+ 	= [0-9]+
