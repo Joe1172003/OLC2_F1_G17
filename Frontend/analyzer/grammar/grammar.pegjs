@@ -2,16 +2,16 @@ start
     = _ grammar
 
 grammar
-    = ( newLine comment newLine / rule newLine)+
+    = ( _ comment _ / rule _)+
 	
-rule
-    = newLine identifier newLine (complement)? newLine "=" _ choice newLine (_ ";" _ )?
-	
+rule    
+    = _ identifier _ (complement)? _ "=" _ choice _ (_ ";" _ )?
+		
 choice 
-	= sequence ( newLine comment newLine / (newLine "/" newLine sequence newLine (comment)? newLine))*
+	= sequence ( _ comment _ / (_ "/" _ sequence _ (comment)? _))*
 	  
 sequence
-    = pluck (_ pluck)*
+    = pluck (_ pluck !(_ literal? _"="))*
 
 pluck
     = "@"? _ alias
@@ -83,12 +83,8 @@ regex_range
 identifier
     = [a-zA-Z_][a-zA-Z0-9_]*
 
-_  
-    = [ \t]*
-
-
-newLine "whitespace"
-        = [ \t\n\r]*
+_  "whitespace"
+    = [ \t\n\r]*
 
 number
  	= [0-9]+
